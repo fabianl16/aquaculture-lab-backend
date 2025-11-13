@@ -12,12 +12,18 @@ interface EnVars {
     RABBITMQ_USERNAME: string;
     RABBITMQ_PASSWORD: string;
     RABBITMQ_PORT: number,
+    REDIS_CLIENT: string,
+    REDIS_HOST: string,
+    REDIS_PORT: number
 }
 
 
 const envVarsSchema = joi.object({
     BACKEND_PORT: joi.number().required(),
+    REDIS_PORT: joi.number().required(),
     RABBITMQ_HOST: joi.string().required(),
+    REDIS_CLIENT: joi.string().required(),
+    REDIS_HOST: joi.string().required(),
     RABBITMQ_GATEWAY_QUEUE: joi.string().required(),
     RABBITMQ_SIMULATIONS_QUEUE: joi.string().required(),
     RABBITMQ_SERVICE: joi.string().required(),
@@ -35,10 +41,13 @@ if (error) {
 const envVars: EnVars = value;
 
 const rabbitmqUrl = `amqp://${envVars.RABBITMQ_USERNAME}:${envVars.RABBITMQ_PASSWORD}@${envVars.RABBITMQ_HOST}:${envVars.RABBITMQ_PORT}`;
+const redisUrl = `redis://${envVars.REDIS_HOST}:${envVars.REDIS_PORT}`
 
 export const envs = {
     nestJsPort: envVars.BACKEND_PORT,
+    redisUrl,
     rabbitmqUrl,
+    redisClient: envVars.REDIS_CLIENT,
     rabbitmqGatewayQueue: envVars.RABBITMQ_GATEWAY_QUEUE,
     rabbitmqSimulationsQueue: envVars.RABBITMQ_SIMULATIONS_QUEUE,
     rabbitmqService: envVars.RABBITMQ_SERVICE,

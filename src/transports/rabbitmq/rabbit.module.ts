@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { envs } from 'src/config';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { envs } from 'src/config';
         },
       },
     ]),
-    RabbitModule
+    RabbitModule,
+    RedisModule
   ],
   exports:[ClientsModule]
 })
