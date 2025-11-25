@@ -1,6 +1,6 @@
-import { Controller, Inject, Logger } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { SimulationsService } from './simulations.service';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { envs } from 'src/config';
 import { SimulationPayloadDto } from './dto';
 
@@ -11,7 +11,7 @@ export class SimulationsController {
   constructor(
     private readonly simulationsService: SimulationsService
   ) {}
-  @EventPattern(envs.rabbitmqGatewayQueue)
+  @MessagePattern(envs.rabbitmqGatewayQueue)
   async handleSimulationRequest(
     @Payload() simulationPayload: SimulationPayloadDto
   ){  
