@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import Redis from 'ioredis';
 import { envs } from 'src/config';
 import { SimulationPayloadDto } from './dto';
 import { UUID } from '../common/types';
