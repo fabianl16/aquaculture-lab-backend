@@ -4,8 +4,7 @@ import { envs } from 'src/config';
 import { SimulationPayloadDto } from './dto';
 import { UUID } from '../common/types';
 import { createUuid } from 'src/common/helpers';
-import { JobStatus } from 'src/common/constants';
-import { RedisService } from 'src/transports/redis/redis.service';
+import { JobsService } from 'src/jobs/jobs.service';
 
 @Injectable()
 export class SimulationsService {
@@ -13,29 +12,18 @@ export class SimulationsService {
     constructor(
         @Inject(envs.rabbitmqService)
         private readonly rabbitClient: ClientProxy,
-        private readonly redisService: RedisService
+        private readonly jobsService: JobsService
     ){}
 
     async start_simulation(simulationPayload: SimulationPayloadDto){
         const jobUuid: UUID = await createUuid();
-        
-        await this.redisService.registerJob(
-            jobUuid,
-            {
-               status: JobStatus.SENDING_TO_START,
-               progress: 0,
-               tank_id: simulationPayload.tank_id,
-               created_at: new Date().toISOString(),
-               updated_at: new Date().toISOString()
-            }
-        )
 
-        await this.redisService.updateJob(
+        await this.jobsService.bootstrapJob(
             jobUuid,
-            {
-                status: JobStatus.QUEUED,
-            }
-        )
+            simulationPayload.tank_id,
+            simulationPayload.preset
+        );
+
         this.rabbitClient.emit(envs.rabbitmqSimulationsQueue, {
             job_id: jobUuid, 
             ...simulationPayload,

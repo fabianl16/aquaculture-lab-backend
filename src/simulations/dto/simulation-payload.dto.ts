@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsDefined, IsInt, IsISO8601, IsNotEmptyObject, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsDefined, IsInt, IsISO8601, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, ValidateNested } from "class-validator";
 import { PresetDto } from ".";
 
 export class SimulationPayloadDto {
@@ -29,12 +29,12 @@ export class SimulationPayloadDto {
   start_time: string;
 
   @ApiProperty({
-    description: 'ID del tanque',
-    example: 101,
+    description: 'ID del tanque (UUID)',
+    example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @IsInt()
-  @IsNumber()
-  tank_id: number;
+  @IsString()
+  @IsNotEmpty()
+  tank_id: string;
 
   // --- Validación anidada ---
   @ApiProperty({
