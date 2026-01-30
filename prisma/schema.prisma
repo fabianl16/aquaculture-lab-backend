@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat    = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+
+enum JobStatus {
+  QUEUED
+  SENDING_TO_START
+  START_SIMULATION
+
+  VALIDATING
+  RUNNING
+  GENERATING_FILES
+
+  PREPARING_UPLOAD
+  QUEUED_FOR_UPLOAD
+  UPLOADING
+  VALIDATING_UPLOAD
+  UPLOAD_RETRYING
+  UPLOAD_FAILED
+  UPLOAD_COMPLETED
+
+  RETRY_WAITING
+  RETRYING
+
+  COMPLETED
+  ERROR
+  TIMEOUT
+  CANCELLED
+  FAILED_PERMANENTLY
+}
+
+
+model Job {
+  id          String @id
+  tankId      String
+  tank        Tank     @relation(fields: [tankId], references: [id])
+  status      JobStatus
+  progress    Float        @default(0)
+  url         String?     
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  events      JobEvent[]
+}
+
+model Tank {
+    id        String   @id @default(uuid())
+    name      String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    jobs      Job[]
+}
+
+model JobEvent {
+  id        String       @id @default(uuid())
+  job_id     String
+  status    JobStatus
+  progress  Float?
+  message   String?
+  payload   Json?
+  createdAt DateTime     @default(now())
+  job Job @relation(fields: [job_id], references: [id], onDelete: Cascade)
+
+  @@index([job_id])
+}
+
+

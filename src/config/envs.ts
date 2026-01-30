@@ -14,7 +14,11 @@ interface EnVars {
     RABBITMQ_PORT: number,
     REDIS_CLIENT: string,
     REDIS_HOST: string,
-    REDIS_PORT: number
+    REDIS_PORT: number,
+    REDIS_SIMULATION_CHANNEL: string,
+    REDIS_SIMULATION_NAMESPACE: string, 
+    REDIS_SIMULATION_EVENT: string
+    DATABASE_URL: string,
 }
 
 
@@ -24,6 +28,10 @@ const envVarsSchema = joi.object({
     RABBITMQ_HOST: joi.string().required(),
     REDIS_CLIENT: joi.string().required(),
     REDIS_HOST: joi.string().required(),
+    REDIS_SIMULATION_CHANNEL: joi.string().required(),
+    REDIS_SIMULATION_NAMESPACE: joi.string().required(),
+    REDIS_SIMULATION_EVENT: joi.string().required(),
+    DATABASE_URL: joi.string().required(),
     RABBITMQ_GATEWAY_QUEUE: joi.string().required(),
     RABBITMQ_SIMULATIONS_QUEUE: joi.string().required(),
     RABBITMQ_SERVICE: joi.string().required(),
@@ -48,7 +56,11 @@ export const envs = {
     redisUrl,
     rabbitmqUrl,
     redisClient: envVars.REDIS_CLIENT,
+    redisSimulationChannel: envVars.REDIS_SIMULATION_CHANNEL,
+    redisSimulationNameSpace: envVars.REDIS_SIMULATION_NAMESPACE,
+    redisSimulationEvent: envVars.REDIS_SIMULATION_EVENT,
     rabbitmqGatewayQueue: envVars.RABBITMQ_GATEWAY_QUEUE,
     rabbitmqSimulationsQueue: envVars.RABBITMQ_SIMULATIONS_QUEUE,
     rabbitmqService: envVars.RABBITMQ_SERVICE,
+    databaseUrl: envVars.DATABASE_URL,
 }
